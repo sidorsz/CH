@@ -1,0 +1,256 @@
+#waveform {
+    display: flex;
+    gap: 4px;
+    margin-top: 8px;
+  }
+  #waveform .bar {
+    display: block;
+    width: 4px;
+    animation: bounce 1s infinite ease-in-out;
+  }
+  #waveform .bar:nth-child(1) {
+    background-color: #FF0000; /* Merah */
+    animation-delay: 0.1s;
+  }
+  #waveform .bar:nth-child(2) {
+    background-color: #FF7F00; /* Jingga */
+    animation-delay: 0.2s;
+  }
+  #waveform .bar:nth-child(3) {
+    background-color: #FFFF00; /* Kuning */
+    animation-delay: 0.3s;
+  }
+  #waveform .bar:nth-child(4) {
+    background-color: #00FF00; /* Hijau */
+    animation-delay: 0.4s;
+  }
+  #waveform .bar:nth-child(5) {
+    background-color: #0000FF; /* Biru */
+    animation-delay: 0.5s;
+  }
+  @keyframes bounce {
+    0%, 100% { height: 20px; }
+    50% { height: 40px; }
+  }
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .card-entrance {
+    animation: cardEntrance 0.8s ease-out forwards;
+  }
+  @keyframes cardEntrance {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes line-expand {
+    0% { width: 0%; opacity: 0; }
+    100% { width: 50%; opacity: 1; }
+  }
+  
+  .animate-line-expand {
+    animation: line-expand 1.5s ease-out forwards;
+  }
+  
+  .hover\:drop-shadow-glow:hover {
+    filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.4));
+  }
+  @keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .link-hover-effect {
+    @apply relative overflow-hidden inline-block;
+  }
+  
+  .link-hover-effect::after {
+    content: '';
+    @apply absolute bottom-0 left-0 w-0 h-px bg-blue-500 transition-all duration-300;
+  }
+  
+  .link-hover-effect:hover::after {
+    @apply w-full;
+  }
+  
+  .social-icon {
+    @apply w-10 h-10 rounded-full flex items-center justify-center 
+           text-white transition-all duration-300 hover:scale-110 
+           shadow-lg hover:shadow-xl;
+  }
+  
+  .particle-network-animation {
+    background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    animation: particles 20s linear infinite;
+  }
+  
+  @keyframes particles {
+    from { background-position: 0 0; }
+    to { background-position: 40px 40px; }
+  }
+  
+  .dark-mode {
+    @apply bg-gray-900 text-gray-100;
+  }
+  /* Reset dan font smoothing */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  body {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1549%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='url(%23SvgjsLinearGradient1550)'%3e%3c/rect%3e%3cuse xlink:href='%23SvgjsSymbol1557' x='0' y='0'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsSymbol1557' x='720' y='0'%3e%3c/use%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1549'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3clinearGradient x1='15.28%25' y1='139.29%25' x2='84.72%25' y2='-39.29%25' gradientUnits='userSpaceOnUse' id='SvgjsLinearGradient1550'%3e%3cstop stop-color='%230e2a47' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(0%2c 7%2c 213%2c 1)' offset='1'%3e%3c/stop%3e%3c/linearGradient%3e%3cpath d='M-1 0 a1 1 0 1 0 2 0 a1 1 0 1 0 -2 0z' id='SvgjsPath1556'%3e%3c/path%3e%3cpath d='M-3 0 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0z' id='SvgjsPath1554'%3e%3c/path%3e%3cpath d='M-5 0 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0z' id='SvgjsPath1551'%3e%3c/path%3e%3cpath d='M2 -2 L-2 2z' id='SvgjsPath1552'%3e%3c/path%3e%3cpath d='M6 -6 L-6 6z' id='SvgjsPath1553'%3e%3c/path%3e%3cpath d='M30 -30 L-30 30z' id='SvgjsPath1555'%3e%3c/path%3e%3c/defs%3e%3csymbol id='SvgjsSymbol1557'%3e%3cuse xlink:href='%23SvgjsPath1551' x='30' y='30' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1552' x='30' y='90' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1552' x='30' y='150' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1553' x='30' y='210' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1553' x='30' y='270' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1551' x='30' y='330' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1552' x='30' y='390' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1551' x='30' y='450' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1552' x='30' y='510' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1551' x='30' y='570' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3c/symbol%3e%3c/svg%3e");
+  }
+  body * {
+    font-family: 'Roboto', sans-serif;
+  }
+  /* Container grid untuk tata letak (opsional) */
+  #boxes {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    grid-template-areas: 
+      "A B"
+      "A C";
+    gap: 32px;
+    place-content: center;
+    height: 100vh;
+  }
+  /* Styling Player */
+  #player03 {
+    grid-area: C;
+  }
+  #player03 .controls {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 20px;
+  }
+  .player {
+    background-color: #080747;
+    padding: 28px;
+    border-radius: 20px;
+  }
+  .player img {
+    width: 84px;
+    height: 84px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+  .info {
+    color: #E1E1E6;
+  }
+  .info p {
+    opacity: 0.68;
+    font-size: 19px;
+  }
+  .info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+  .player h1 {
+    font-size: 27px;
+    color: #E1E1E6;
+    padding-bottom: 7px;
+  }
+  @media (max-width: 670px) {
+    #boxes {
+      display: flex;
+      flex-direction: column;
+      max-width: 270px;
+      margin: auto;
+      height: auto;
+      padding-block: 60px;
+    }
+  }
+    /* Definisikan font-face untuk Esportiva */
+    @font-face {
+      font-family: 'Esportiva';
+      src: url('path-ke-font/Esportiva.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #000;
+    }
+
+    .bubble-text {
+      font-family: 'Esportiva', sans-serif;
+      font-size: 3rem;
+      color: #fff;
+      position: relative;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .bubble-text::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 20%, transparent 20%);
+      background-size: 50px 50px;
+      transform: translate(-50%, -50%) scale(0);
+      animation: bubble 5s infinite;
+    }
+
+    @keyframes bubble 
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(0);
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+
+  .play-button {
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .play-button:hover {
+    background: rgba(0, 0, 0, 0.7);
+  }
+/* Untuk layar dengan lebar di bawah 768px */
+@media (max-width: 768px) {
+  /* Atur tampilan web Anda di sini */
+}
+
+/* Untuk layar dengan lebar di bawah 480px */
+@media (max-width: 480px) {
+  /* Atur tampilan web Anda di sini */
+}

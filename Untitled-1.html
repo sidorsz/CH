@@ -1,0 +1,2675 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sidorus - Personal Gallery</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Tailwind CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Google Fonts: Bebas Neue & Rajdhani -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet CSS (Jika diperlukan) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+  <style>
+    /* ========== CUSTOM FONT STYLES ========== */
+    /* Untuk layar dengan lebar di bawah 768px */
+@media (max-width: 768px) {
+  /* Atur tampilan web Anda di sini */
+}
+
+/* Untuk layar dengan lebar di bawah 480px */
+@media (max-width: 480px) {
+  /* Atur tampilan web Anda di sini */
+}
+
+    .scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+    
+    .font-esportiva-heading {
+      font-family: 'Bebas Neue', cursive;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .font-esportiva-body {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 500;
+    }
+
+    /* Tambahan styling heading dan button */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Bebas Neue', cursive;
+      letter-spacing: 1.5px;
+    }
+    button {
+      letter-spacing: 1.2px;
+    }
+
+    /* ========== BACKGROUND & LAYOUT ========== */
+    .gradient-bg {
+      background: linear-gradient(135deg, #151b3d 0%, #21414f 100%, #42205f 15%);
+    }
+    .card-hover {
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .card-hover:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    #photoModal {
+      background: rgba(0, 0, 0, 0.9);
+    }
+    .active-tab {
+      color: #f5f5f5 !important;
+    }
+    .active-tab span {
+      width: 100% !important;
+    }
+
+    /* ========== WAVEFORM ANIMATION ========== */
+    #waveform {
+      display: flex;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    #waveform .bar {
+      display: block;
+      width: 4px;
+      animation: bounce 1s infinite ease-in-out;
+    }
+    #waveform .bar:nth-child(1) {
+      background-color: #FF0000;
+      animation-delay: 0.1s;
+    }
+    #waveform .bar:nth-child(2) {
+      background-color: #FF7F00;
+      animation-delay: 0.2s;
+    }
+    #waveform .bar:nth-child(3) {
+      background-color: #FFFF00;
+      animation-delay: 0.3s;
+    }
+    #waveform .bar:nth-child(4) {
+      background-color: #00FF00;
+      animation-delay: 0.4s;
+    }
+    #waveform .bar:nth-child(5) {
+      background-color: #0000FF;
+      animation-delay: 0.5s;
+    }
+    @keyframes bounce {
+      0%, 100% { height: 20px; }
+      50% { height: 40px; }
+    }
+    @keyframes drawLine {
+  from {
+    width: 0;
+    opacity: 0;
+  }
+  to {
+    width: 100%;
+    opacity: 1;
+  }
+}
+
+.navbar-underline {
+  height: 1px; /* sangat tipis */
+  background: linear-gradient(to right, #a855f7, #ec4899, #fbbf24, #3b82f6);
+  animation: drawLine 1.5s ease-out forwards;
+}
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .card-entrance {
+    animation: cardEntrance 0.8s ease-out forwards;
+  }
+  @keyframes cardEntrance {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  /* Gaya untuk tombol kembali ke atas */
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #008c5f;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.back-to-top:hover {
+    background-color: #1d2129;
+    transform: scale(1.1);
+}
+
+.back-to-top svg {
+    fill: #fff;
+}
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.link-hover-effect {
+  @apply relative overflow-hidden inline-block;
+}
+
+.link-hover-effect::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-0 h-px bg-blue-500 transition-all duration-300;
+}
+
+.link-hover-effect:hover::after {
+  @apply w-full;
+}
+
+.social-icon {
+   @apply w-10 h-10 rounded-full flex items-center justify-center 
+         text-white transition-all duration-300 hover:scale-110 
+         shadow-lg hover:shadow-xl;
+}
+
+.particle-network-animation {
+  background-image: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: particles 20s linear infinite;
+}
+
+@keyframes particles {
+  from { background-position: 0 0; }
+  to { background-position: 40px 40px; }
+}
+
+.dark-mode {
+  @apply bg-gray-900 text-gray-100;
+}
+
+
+/* Reset dan font smoothing */
+* {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    body {
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:svgjs='http://svgjs.com/svgjs' width='1440' height='560' preserveAspectRatio='none' viewBox='0 0 1440 560'%3e%3cg mask='url(%26quot%3b%23SvgjsMask1549%26quot%3b)' fill='none'%3e%3crect width='1440' height='560' x='0' y='0' fill='url(%23SvgjsLinearGradient1550)'%3e%3c/rect%3e%3cuse xlink:href='%23SvgjsSymbol1557' x='0' y='0'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsSymbol1557' x='720' y='0'%3e%3c/use%3e%3c/g%3e%3cdefs%3e%3cmask id='SvgjsMask1549'%3e%3crect width='1440' height='560' fill='white'%3e%3c/rect%3e%3c/mask%3e%3clinearGradient x1='15.28%25' y1='139.29%25' x2='84.72%25' y2='-39.29%25' gradientUnits='userSpaceOnUse' id='SvgjsLinearGradient1550'%3e%3cstop stop-color='%230e2a47' offset='0'%3e%3c/stop%3e%3cstop stop-color='rgba(0%2c 7%2c 213%2c 1)' offset='1'%3e%3c/stop%3e%3c/linearGradient%3e%3cpath d='M-1 0 a1 1 0 1 0 2 0 a1 1 0 1 0 -2 0z' id='SvgjsPath1556'%3e%3c/path%3e%3cpath d='M-3 0 a3 3 0 1 0 6 0 a3 3 0 1 0 -6 0z' id='SvgjsPath1554'%3e%3c/path%3e%3cpath d='M-5 0 a5 5 0 1 0 10 0 a5 5 0 1 0 -10 0z' id='SvgjsPath1551'%3e%3c/path%3e%3cpath d='M2 -2 L-2 2z' id='SvgjsPath1552'%3e%3c/path%3e%3cpath d='M6 -6 L-6 6z' id='SvgjsPath1553'%3e%3c/path%3e%3cpath d='M30 -30 L-30 30z' id='SvgjsPath1555'%3e%3c/path%3e%3c/defs%3e%3csymbol id='SvgjsSymbol1557'%3e%3cuse xlink:href='%23SvgjsPath1551' x='30' y='30' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1552' x='30' y='90' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1552' x='30' y='150' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1553' x='30' y='210' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1553' x='30' y='270' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1551' x='30' y='330' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1552' x='30' y='390' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1551' x='30' y='450' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1552' x='30' y='510' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3cuse xlink:href='%23SvgjsPath1551' x='30' y='570' stroke='rgba(11%2c 102%2c 200%2c 1)'%3e%3c/use%3e%3c/symbol%3e%3c/svg%3e");
+    }
+    body * {
+      font-family: 'Roboto', sans-serif;
+    }
+    /* Container grid untuk tata letak (opsional) */
+    #boxes {
+      display: grid;
+      grid-template-columns: max-content max-content;
+      grid-template-areas: 
+        "A B"
+        "A C";
+      gap: 32px;
+      place-content: center;
+      height: 100vh;
+    }
+    /* Styling Player */
+    #player03 {
+      grid-area: C;
+    }
+    #player03 .controls {
+      display: flex;
+      justify-content: space-around;
+      padding-top: 20px;
+    }
+    .player {
+      background-color: #080747;
+      padding: 28px;
+      border-radius: 20px;
+    }
+    .player img {
+      width: 84px;
+      height: 84px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .info {
+      color: #E1E1E6;
+    }
+    .info p {
+      opacity: 0.68;
+      font-size: 19px;
+    }
+    .info-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+    .player h1 {
+      font-size: 27px;
+      color: #E1E1E6;
+      padding-bottom: 7px;
+    }
+    @media (max-width: 670px) {
+      #boxes {
+        display: flex;
+        flex-direction: column;
+        max-width: 270px;
+        margin: auto;
+        height: auto;
+        padding-block: 60px;
+      }
+    }
+    
+  </style>
+</head>
+
+<body class="gradient-bg min-h-screen text-white font-esportiva-body">
+</script>
+<a href="#" id="backToTop" class="back-to-top">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+      <path d="M12 4l-8 8h5v4h6v-4h5z"/>
+  </svg>
+</a>
+
+
+<!-- ========== LOGIN SCREEN ========== -->
+<div id="loginScreen" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-90">
+  <div class="flex flex-col items-center">
+    <!-- Card Lock -->
+    <div class="bg-gray-800 p-8 rounded-lg w-96">
+      <h2 class="text-3xl mb-6 font-esportiva-heading text-center tracking-wider">SIDORUS</h2>
+      <input 
+        type="password" 
+        id="password" 
+        class="w-full p-3 mb-4 bg-gray-700 rounded-lg font-esportiva-body" 
+        placeholder="Enter Access Code" 
+      />
+      <button 
+        onclick="checkPassword()" 
+        class="w-full py-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:opacity-90 font-esportiva-heading tracking-wider">
+        UNLOCK
+      </button>
+    </div>
+    <!-- Ikon dan tombol Show Password berada di bawah card lock -->
+    <div class="mt-4 flex flex-col items-center">
+      <i class="fas fa-lock text-4xl text-gray-300 mb-2"></i>
+      <button 
+        onclick="revealPassword()" 
+        class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 transition">
+        Show Password
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function checkPassword() {
+    const pwd = document.getElementById('password').value;
+    if (pwd === 'sidorus') {
+      unlockAccess();
+    } else {
+      alert("Password salah!");
+    }
+  }
+  
+  function revealPassword() {
+    const input = prompt("Ketik 'I LOVE YOU SIDORUS'");
+    if (input === "I LOVE YOU SIDORUS") {
+      alert("Kata sandinya: sidorus");
+    } else {
+      alert("Ketik teks yang benar!");
+    }
+  }
+  
+  function unlockAccess() {
+    document.getElementById('loginScreen').remove();
+    document.getElementById('mainContent').classList.remove('hidden');
+  }
+</script>
+
+
+
+  <!-- ========== MAIN CONTENT ========== -->
+  <div id="mainContent" class="hidden container mx-auto px-4 py-12">
+    <!-- TOP BAR -->
+<div class="bg-pink-100/20 backdrop-blur-sm w-full py-2 px-4 flex justify-between items-center relative">
+  <!-- Kolom Pencarian -->
+  <div class="relative flex items-center space-x-2">
+    <!-- Ikon Pencarian (Font Awesome) -->
+    <i class="fas fa-search text-gray-500"></i>
+    <input
+      id="searchInput"
+      type="text"
+      placeholder="Search in the website..."
+      class="bg-transparent focus:outline-none text-gray-600 placeholder-gray-400"
+    />
+    <!-- Hasil Pencarian -->
+    <div
+      id="searchResults"
+      class="absolute top-full left-0 w-80 bg-white text-gray-700 rounded-b-lg shadow-lg mt-1 z-10 hidden"
+    ></div>
+  </div>
+
+  <!-- Sosial Media Icons -->
+  <div class="flex items-center space-x-4 text-gray-500">
+    <!-- Facebook -->
+    <a href="#" class="hover:text-pink-500">
+      <i class="fab fa-facebook-f"></i>
+    </a>
+    <!-- Instagram -->
+    <a href="#" class="hover:text-pink-500">
+      <i class="fab fa-instagram"></i>
+    </a>
+    <!-- YouTube -->
+    <a href="#" class="hover:text-pink-500">
+      <i class="fab fa-youtube"></i>
+    </a>
+    <!-- TikTok (opsional) -->
+    <a href="#" class="hover:text-pink-500">
+      <i class="fab fa-tiktok"></i>
+    </a>
+<!-- Jarak yang besar antara ikon sosial dan tombol login/daftar -->
+<div class="ml-24 flex items-center space-x-8">
+  <!-- Tombol login sebagai icon untuk memunculkan modal -->
+  <button
+    id="openRegisterModal"
+    class="p-2 rounded-full text-gray-500 hover:text-pink-500 focus:outline-none focus:ring-2 focus:ring-pink-500"
+  >
+    <i class="fas fa-user text-xl"></i>
+  </button>
+</div>
+  </div>
+</div>
+
+    <!-- Modal Login -->
+    <div
+      id="loginModal"
+      class="fixed inset-0 bg-black/20 backdrop-blur-sm hidden z-50 transition-all duration-300"
+    >
+      <div
+        class="absolute top-4 right-4 bg-white backdrop-blur-lg rounded-xl p-6 shadow-2xl w-full max-w-sm transform transition-all border border-gray-100 scale-95"
+      >
+        <!-- Tombol Tutup -->
+        <button
+          id="closeLoginModal"
+          class="absolute top-2 right-2 text-gray-400 hover:text-blue-500 text-xl transition-colors p-1 hover:bg-blue-50 rounded-full w-8 h-8 flex items-center justify-center"
+        >
+          &times;
+        </button>
+
+        <div class="text-center mb-6">
+          <h2
+            class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent mb-2"
+          >
+            Login
+          </h2>
+          <p class="text-sm text-gray-500">Masuk untuk melanjutkan</p>
+        </div>
+
+        <form class="space-y-4">
+          <div class="relative">
+            <label
+              for="loginEmail"
+              class="block text-xs font-medium text-gray-500 mb-1"
+              >Email</label
+            >
+            <div class="relative">
+              <input
+                id="loginEmail"
+                type="email"
+                required
+                class="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all placeholder-gray-400 text-gray-700"
+              />
+              <svg
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div class="relative">
+            <label
+              for="loginPassword"
+              class="block text-xs font-medium text-gray-500 mb-1"
+              >Password</label
+            >
+            <div class="relative">
+              <input
+                id="loginPassword"
+                type="password"
+                required
+                class="w-full pl-10 pr-4 py-2.5 text-sm rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-200 focus:border-blue-400 transition-all placeholder-gray-400 text-gray-700"
+              />
+              <svg
+                class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white text-sm font-semibold py-2.5 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg transform active:scale-95"
+          >
+            Masuk
+          </button>
+
+          <div class="text-center text-sm text-gray-500 mt-4">
+            Belum punya akun?
+            <a
+              href="#"
+              id="openRegisterModal"
+              class="text-blue-500 hover:text-blue-600 font-medium underline"
+              >Daftar disini</a
+            >
+          </div>
+        </form>
+      </div>
+    </div>
+
+   <!-- Modal Registrasi -->
+<div
+id="registrationModal"
+class="fixed inset-0 bg-black/20 backdrop-blur-sm hidden z-50 transition-all duration-300"
+>
+<div
+  class="absolute top-4 right-4 bg-white backdrop-blur-lg rounded-xl p-6 shadow-2xl w-full max-w-sm transform transition-all border border-gray-100 scale-95"
+>
+  <!-- Tombol Tutup -->
+  <button
+    id="closeRegistrationModal"
+    class="absolute top-2 right-2 text-gray-400 hover:text-blue-500 text-xl transition-colors p-1 hover:bg-blue-50 rounded-full w-8 h-8 flex items-center justify-center"
+  >
+    &times;
+  </button>
+
+  <div class="text-center mb-6">
+    <h2
+      class="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent mb-2"
+    >
+      Sign Up
+    </h2>
+    <p class="text-sm text-gray-500">Daftar untuk bergabung</p>
+  </div>
+
+  <form class="space-y-4">
+    <!-- Tombol Sign Up dengan Google -->
+    <button
+      type="button"
+      class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
+    >
+      <div class="bg-white p-2 rounded-full">
+        <svg class="w-4" viewBox="0 0 533.5 544.3">
+          <path
+            d="M533.5 278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1 33.8-25.7 63.7-54.4 82.7v68h87.7c51.5-47.4 81.1-117.4 81.1-200.2z"
+            fill="#4285f4"
+          />
+          <path
+            d="M272.1 544.3c73.4 0 135.3-24.1 180.4-65.7l-87.7-68c-24.4 16.6-55.9 26-92.6 26-71 0-131.2-47.9-152.8-112.3H28.9v70.1c46.2 91.9 140.3 149.9 243.2 149.9z"
+            fill="#34a853"
+          />
+          <path
+            d="M119.3 324.3c-11.4-33.8-11.4-70.4 0-104.2V150H28.9c-38.6 76.9-38.6 167.5 0 244.4l90.4-70.1z"
+            fill="#fbbc04"
+          />
+          <path
+            d="M272.1 107.7c38.8-.6 76.3 14 104.4 40.8l77.7-77.7C405 24.6 339.7-.8 272.1 0 169.2 0 75.1 58 28.9 150l90.4 70.1c21.5-64.5 81.8-112.4 152.8-112.4z"
+            fill="#ea4335"
+          />
+        </svg>
+      </div>
+      <span class="ml-4">Sign Up with Google</span>
+    </button>
+
+    <!-- Tombol Sign Up dengan GitHub -->
+    <button
+      type="button"
+      class="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
+    >
+      <div class="bg-white p-1 rounded-full">
+        <svg class="w-6" viewBox="0 0 32 32">
+          <path
+            fill-rule="evenodd"
+            d="M16 4C9.371 4 4 9.371 4 16c0 5.3 3.438 9.8 8.207 11.387.602.11.82-.258.82-.578 0-.286-.011-1.04-.015-2.04-3.34.723-4.043-1.609-4.043-1.609-.547-1.387-1.332-1.758-1.332-1.758-1.09-.742.082-.726.082-.726 1.203.086 1.836 1.234 1.836 1.234 1.07 1.836 2.808 1.305 3.492 1 .11-.777.422-1.305.762-1.605-2.664-.301-5.465-1.332-5.465-5.93 0-1.313.469-2.383 1.234-3.223-.121-.3-.535-1.523.117-3.175 0 0 1.008-.32 3.301 1.23A11.487 11.487 0 0116 9.805c1.02.004 2.047.136 3.004.402 2.293-1.55 3.297-1.23 3.297-1.23.656 1.652.246 2.875.12 3.175.77.84 1.231 1.91 1.231 3.223 0 4.61-2.804 5.621-5.476 5.922.43.367.812 1.101.812 2.219 0 1.605-.011 2.898-.011 3.293 0 .32.214.695.824.578C24.566 25.797 28 21.3 28 16c0-6.629-5.371-12-12-12z"
+          />
+        </svg>
+      </div>
+      <span class="ml-4">Sign Up with GitHub</span>
+    </button>
+
+    <div class="my-12 border-b text-center">
+      <div
+        class="leading-none px-2 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-1/2"
+      >
+        Or sign up with e-mail
+      </div>
+    </div>
+
+    <div class="mx-auto max-w-xs space-y-5">
+      <!-- Input Email -->
+      <input
+        type="email"
+        placeholder="Email"
+        class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm text-black focus:outline-none focus:border-gray-400 focus:bg-white"
+      />
+      <!-- Input Password -->
+      <input
+        type="text"
+        placeholder="Password"
+        class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm text-black focus:outline-none focus:border-gray-400 focus:bg-white"
+      />
+      <!-- Input Confirm Password dengan ikon mata -->
+      <div class="relative">
+        <input
+          id="confirmPassword"
+          type="password"
+          placeholder="Confirm Password"
+          class="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm text-black focus:outline-none focus:border-gray-400 focus:bg-white"
+        />
+        <!-- Tombol toggle untuk menampilkan/sembunyikan teks -->
+        <button
+          type="button"
+          id="toggleConfirmPassword"
+          class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+        >
+          <!-- Icon mata tertutup -->
+          <svg
+            id="iconClosed"
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19c-5.523 0-10-4.477-10-10 0-1.02.155-2.004.444-2.94m2.168-2.168A9.953 9.953 0 0112 5c5.523 0 10 4.477 10 10 0 1.02-.155 2.004-.444 2.94m-2.168 2.168L3 3"
+            ></path>
+          </svg>
+          <!-- Icon mata terbuka (disembunyikan secara default) -->
+          <svg
+            id="iconOpen"
+            class="w-5 h-5 hidden"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Checkbox Persetujuan -->
+      <div class="flex items-center">
+        <input
+          id="agree"
+          type="checkbox"
+          class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+        />
+        <label for="agree" class="ml-2 text-xs text-gray-600">
+          I agree to abide by templatana's
+          <a
+            href="#"
+            class="border-b border-gray-500 border-dotted"
+            >Terms of Service</a
+          >
+          and
+          <a
+            href="#"
+            class="border-b border-gray-500 border-dotted"
+            >Privacy Policy</a
+          >
+        </label>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center"
+    >
+      <svg
+        class="w-6 h-6 -ml-2"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        viewBox="0 0 24 24"
+      >
+        <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+        <circle cx="8.5" cy="7" r="4" />
+        <path d="M20 8v6M23 11h-6" />
+      </svg>
+      <span class="ml-3">Sign Up</span>
+    </button>
+  </form>
+
+  <div class="text-center text-sm text-gray-500 mt-4">
+    Sudah punya akun?
+    <a
+      href="#"
+      id="openLoginModalFromRegister"
+      class="text-blue-500 hover:text-blue-600 font-medium underline"
+      >Masuk disini</a
+    >
+  </div>
+</div>
+</div>
+
+<!-- Script untuk toggling modal dan show/hide confirm password -->
+<script>
+// Ambil elemen modal dan tombol
+const loginModal = document.getElementById("loginModal");
+const registrationModal = document.getElementById("registrationModal");
+const openRegisterModal = document.getElementById("openRegisterModal");
+const openLoginModalFromRegister = document.getElementById("openLoginModalFromRegister");
+const closeLoginModal = document.getElementById("closeLoginModal");
+const closeRegistrationModal = document.getElementById("closeRegistrationModal");
+
+// Buka modal registrasi dari modal login
+openRegisterModal.addEventListener("click", (e) => {
+  e.preventDefault();
+  loginModal.classList.add("hidden");
+  registrationModal.classList.remove("hidden");
+});
+
+// Buka modal login dari modal registrasi
+openLoginModalFromRegister.addEventListener("click", (e) => {
+  e.preventDefault();
+  registrationModal.classList.add("hidden");
+  loginModal.classList.remove("hidden");
+});
+
+// Tombol tutup modal
+closeLoginModal.addEventListener("click", () => {
+  loginModal.classList.add("hidden");
+});
+
+closeRegistrationModal.addEventListener("click", () => {
+  registrationModal.classList.add("hidden");
+});
+
+// Opsional: tutup modal ketika klik di luar konten modal
+loginModal.addEventListener("click", (e) => {
+  if (e.target === loginModal) {
+    loginModal.classList.add("hidden");
+  }
+});
+registrationModal.addEventListener("click", (e) => {
+  if (e.target === registrationModal) {
+    registrationModal.classList.add("hidden");
+  }
+});
+
+// Toggle untuk menampilkan/sembunyikan teks pada confirm password
+const confirmPassword = document.getElementById("confirmPassword");
+const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+const iconClosed = document.getElementById("iconClosed");
+const iconOpen = document.getElementById("iconOpen");
+
+toggleConfirmPassword.addEventListener("click", () => {
+  if (confirmPassword.type === "password") {
+    confirmPassword.type = "text";
+    iconClosed.classList.add("hidden");
+    iconOpen.classList.remove("hidden");
+  } else {
+    confirmPassword.type = "password";
+    iconOpen.classList.add("hidden");
+    iconClosed.classList.remove("hidden");
+  }
+});
+</script>
+
+
+<!-- Data Contoh Pencarian (pastikan link mengarah ke id elemen yang ada di website) -->
+<script>
+  // Data mewakili isi website dengan properti 'link' sebagai id target
+  const searchData = [
+    {
+      title: "SIDORUS CHRONICLES",
+      content: "DOKUMENTASI KEHIDUPAN YANG LUAR BIASA",
+      link: "header"  // pastikan elemen header memiliki id="header"
+    },
+    {
+      title: "SELAMAT DATANG",
+      content: "Data pribadi, tombol musik & waveform, foto profil",
+      link: "section-beranda"  // pastikan elemen tersebut ada
+    },
+    {
+      title: "ABOUT ME",
+      content: "Saya adalah seorang creative professional di bidang fotografi digital dan produksi musik.",
+      link: "section-about"  // pastikan elemen tersebut ada
+    },
+    {
+      title: "GALERI FOTO",
+      content: "Koleksi foto momen istimewa dan inspirasi visual.",
+      link: "section-foto"  // pastikan elemen tersebut ada
+    }
+  ];
+
+  const searchInput = document.getElementById('searchInput');
+  const searchResults = document.getElementById('searchResults');
+
+  // Saat pengguna mengetik di kolom pencarian
+  searchInput.addEventListener('input', function (e) {
+    const query = e.target.value.toLowerCase().trim();
+
+    if (!query) {
+      searchResults.innerHTML = '';
+      searchResults.classList.add('hidden');
+      return;
+    }
+
+    // Filter data yang sesuai dengan query
+    const filteredItems = searchData.filter(item =>
+      item.title.toLowerCase().includes(query) ||
+      item.content.toLowerCase().includes(query)
+    );
+
+    if (filteredItems.length === 0) {
+      searchResults.innerHTML = `<div class="p-2 text-gray-500">No results found</div>`;
+      searchResults.classList.remove('hidden');
+    } else {
+      // Tampilkan hasil pencarian sebagai link anchor
+      searchResults.innerHTML = filteredItems
+        .map(item => `
+          <a href="#${item.link}" class="block p-2 hover:bg-gray-200 border-b last:border-0">
+            <strong>${item.title}</strong><br>
+            <span class="text-sm">${item.content}</span>
+          </a>
+        `)
+        .join('');
+      searchResults.classList.remove('hidden');
+    }
+  });
+
+  // Menutup hasil pencarian saat klik di luar area pencarian
+  document.addEventListener('click', (e) => {
+    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+      searchResults.innerHTML = '';
+      searchResults.classList.add('hidden');
+    }
+  });
+</script>
+
+    
+<!-- HEADER -->
+<header class="text-center my-16">
+  <h1 class="text-5xl md:text-6xl font-esportiva-heading mb-4 tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600">
+    SIDORUS CHRONICLES
+  </h1>
+  <p class="text-gray-600 md:text-lg font-semibold">
+    DOKUMENTASI KEHIDUPAN YANG LUAR BIASA
+  </p>
+</header>
+
+
+<!-- NAVIGATION TABS -->
+<nav class="mb-1">
+  <ul class="flex justify-center space-x-10">
+    <li>
+      <button 
+        onclick="showSection('section-beranda')" 
+        class="relative px-4 py-2 text-xl font-esportiva-heading text-gray-300 hover:text-purple-100 transition-all duration-300 group focus:outline-none tracking-wider">
+        BERANDA
+        <span class="absolute bottom-0 left-0 h-[1px] w-0 transition-all duration-300 group-hover:w-full" style="background: linear-gradient(to right, #a855f7, #ec4899, #fbbf24, #3b82f6);"></span>
+      </button>
+    </li>
+    <li>
+      <button 
+        onclick="showSection('section-foto', event)" 
+        class="relative px-4 py-2 text-xl font-esportiva-heading text-gray-300 hover:text-purple-100 transition-all duration-300 group focus:outline-none tracking-wider">
+        FOTO
+        <span class="absolute bottom-0 left-0 h-[1px] w-0 transition-all duration-300 group-hover:w-full" style="background: linear-gradient(to right, #a855f7, #ec4899, #fbbf24, #3b82f6);"></span>
+      </button>
+    </li>
+    <li>
+      <button 
+        onclick="showSection('section-video', event)" 
+        class="relative px-4 py-2 text-xl font-esportiva-heading text-gray-300 hover:text-purple-100 transition-all duration-300 group focus:outline-none tracking-wider">
+        VIDEO
+        <span class="absolute bottom-0 left-0 h-[1px] w-0 transition-all duration-300 group-hover:w-full" style="background: linear-gradient(to right, #a855f7, #ec4899, #fbbf24, #3b82f6);"></span>
+      </button>
+      <li>
+        <button 
+          onclick="showSection('section-musik', event)" 
+          class="relative px-4 py-2 text-xl font-esportiva-heading text-gray-300 hover:text-purple-100 transition-all duration-300 group focus:outline-none tracking-wider">
+          MUSIC AI
+          <span class="absolute bottom-0 left-0 h-[1px] w-0 transition-all duration-300 group-hover:w-full" style="background: linear-gradient(to right, #a855f7, #ec4899, #fbbf24, #3b82f6);"></span>
+        </button>
+    </li>
+  </ul>
+</nav>
+
+
+
+
+<!-- Tambahkan definisi animasi pada style Anda -->
+<style>
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fadeInUp {
+    animation: fadeInUp 1s ease-out forwards;
+  }
+</style>
+
+<!-- Paragraf estetis dengan ukuran teks lebih kecil -->
+<p class="mt-6 text-center font-semibold text-base bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent animate-fadeInUp">
+  MENDOKUMENTASIKAN MOMEN-MOMEN ISTIMEWA PENGALAMAN & PERJALANAN
+</p>
+
+
+
+<!-- Section Gabungan Beranda & About Me -->
+<section class="py-8 px-4">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row gap-8">
+    
+   <!-- BERANDA & ABOUT ME SECTIONS -->
+<div id="section-beranda" class="section hidden">
+  <div class="flex flex-col md:flex-row gap-4">
+    
+<!-- BERANDA SECTION -->
+<div id="section-beranda" class="relative group w-full md:w-2/3 lg:w-1/2 bg-gradient-to-br from-gray-900 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up">
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+  
+  <div class="relative space-y-6">
+    <!-- Section Header -->
+    <div class="text-center mb-8">
+      <h2 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 font-esportiva-heading tracking-tight">
+        SELAMAT DATANG
+      </h2>
+      <div class="mt-2 w-20 h-1 bg-gradient-to-r from-blue-500 to-transparent mx-auto rounded-full"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex flex-col md:flex-row items-center justify-between">
+      <!-- Data Pribadi -->
+      <div class="md:w-1/2 text-left space-y-2">
+        <h3 class="text-xl font-esportiva-heading tracking-wider">SIDORUS ARMAN SYUKUR WARUWU, S.M</h3>
+        <p class="text-gray-400">
+          <span class="inline-flex items-center">
+            <i class="fas fa-calendar-days fa-fw mr-2"></i>
+            Tanggal Lahir: Hiliwa'ele, 6 Agustus 2001
+          </span>
+        </p>
+        <p class="text-gray-400">
+          <span class="inline-flex items-center">
+            <i class="fas fa-graduation-cap fa-fw mr-2"></i>
+            Asal Universitas: Universitas Kristen Emmanuel
+          </span>
+        </p>
+        <p class="text-gray-400">
+          <span class="inline-flex items-center">
+            <i class="fas fa-futbol fa-fw mr-2"></i>
+            Hobby: Bola
+          </span>
+        </p>
+      </div>
+      
+      <!-- Tombol Musik & Waveform -->
+      <div class="md:w-1/4 flex flex-col justify-center items-center my-4 md:my-0">
+        <button id="musicButton" class="bg-blue-500 hover:bg-blue-700 text-white font-esportiva-heading p-4 rounded-full tracking-wider">
+          <i class="fas fa-music text-2xl"></i>
+        </button>
+        <div id="waveform">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </div>
+        <audio id="audio" src="musik/Stormzy - Godspeed  Frank Ocean Cover.mp3"></audio>
+      </div>
+      
+      <!-- Foto -->
+      <div class="md:w-1/4 flex justify-center items-center">
+        <img src="foto/MANAJEMEN_SIDORUS ARMAN SYUKUR WARUWU_2021102126.jpg" 
+             alt="Gambar Anda" 
+             class="w-48 h-48 object-cover rounded-2xl" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT ME SECTION -->
+<div id="section-about" class="relative group w-full md:w-2/3 lg:w-1/2 bg-gradient-to-br from-gray-900 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up">
+  <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-3xl opacity-30 group-hover:opacity-50 transition-opacity"></div>
+  
+  <div class="relative space-y-6">
+    <!-- Section Header -->
+    <div class="text-center mb-8">
+      <h2 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 font-esportiva-heading tracking-tight">
+        ABOUT ME
+      </h2>
+      <div class="mt-2 w-20 h-1 bg-gradient-to-r from-blue-500 to-transparent mx-auto rounded-full"></div>
+    </div>
+
+    <!-- Content -->
+    <p class="text-gray-300/90 font-esportiva-body leading-relaxed text-lg md:text-xl text-center max-w-2xl mx-auto transition-colors hover:text-gray-100">
+      Saya adalah seorang <span class="text-blue-400">creative professional</span> dengan pengalaman di bidang 
+      <span class="relative inline-block before:absolute before:-inset-1 before:block before:-skew-y-2 before:bg-blue-500/20 px-2">
+        <span class="relative">fotografi digital</span>
+      </span> 
+      dan produksi musik. Melalui karya-karya yang terkurasi dengan hati, saya berkomitmen untuk menghadirkan pengalaman visual dan audio yang menginspirasi.
+    </p>
+
+    <!-- CTA Button -->
+    <div class="mt-10 flex justify-center">
+      <a href="#section-foto" class="relative inline-flex items-center justify-center px-8 py-3.5 overflow-hidden font-esportiva-heading tracking-wider text-white transition-all duration-300 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 rounded-full group hover:bg-gradient-to-br hover:shadow-xl hover:shadow-blue-500/30">
+        <span class="relative">JELAJAHI KARYA</span>
+        <svg class="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>
+  </div>
+
+  <!-- 1. Modern Gradient with Animated Line -->
+<div class="group relative py-16 px-6 bg-gray-900/50 backdrop-blur-sm border border-gray-700 rounded-xl overflow-hidden">
+  <div class="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-transparent opacity-30 group-hover:opacity-50 transition-opacity"></div>
+  <div class="relative max-w-4xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 font-esportiva-heading tracking-tight"">
+        PORTOFOLIO KREATIF
+      </h2>
+      <div class="mt-3 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-transparent w-1/2 mx-auto rounded-full animate-line-expand"></div>
+    </div>
+    <p class="text-gray-300/80 text-lg text-center mb-8 leading-relaxed hover:drop-shadow-glow transition-all duration-300">
+      Menjelajahi persimpangan <span class="text-purple-400 font-medium">seni digital</span> & <span class="bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">pengalaman imersif.</span> Mendorong batasan dalam media interaktif dan penceritaan eksperimental.
+    </p>
+  </div>
+</div>
+<section>
+
+<!-- SECTION LAYANAN -->
+<section id="section-layanan" class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up">
+  <!-- Background particles -->
+  <div class="absolute inset-0 z-0">
+    <div class="absolute w-full h-full bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSIyIiBmaWxsPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMDUpIi8+PC9zdmc+')]"></div>
+  </div>
+
+  <div class="max-w-6xl mx-auto relative z-10">
+    <h2 class="text-4xl font-esportiva-heading text-center mb-16 tracking-wider animate-float">
+      <span class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 font-esportiva-heading tracking-tight">
+        Passion Projects
+      </span>
+    </h2>
+
+    <div class="grid gap-8 md:grid-cols-3">
+      <!-- Kartu Layanan 1 -->
+      <div class="group relative bg-gradient-to-br from-gray-800/30 to-gray-900/50 p-8 rounded-2xl border border-gray-700/30 hover:border-transparent transition-all duration-500 hover:bg-gray-900/70 backdrop-blur-lg transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-50 transition-opacity"></div>
+        <div class="relative">
+          <div class="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-blue-500/30 to-blue-600/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 animate-pulse-slow">
+            <i class="fas fa-camera-retro text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600"></i>
+          </div>
+          <h3 class="text-2xl font-esportiva-heading mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Fotografi</h3>
+          <p class="text-gray-400 text-md leading-relaxed transition-all duration-300 transform group-hover:translate-x-2">
+            ✦ Membekam momen penuh aksi melalui lensa kamera, menangkap esensi setiap gerakan dan emosi
+          </p>
+        </div>
+      </div>
+
+      <!-- Kartu Layanan 2 -->
+      <div class="group relative bg-gradient-to-br from-gray-800/30 to-gray-900/50 p-8 rounded-2xl border border-gray-700/30 hover:border-transparent transition-all duration-500 hover:bg-gray-900/70 backdrop-blur-lg transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-50 transition-opacity"></div>
+        <div class="relative">
+          <div class="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-blue-500/30 to-blue-600/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 animate-pulse-slow">
+            <i class="fas fa-headphones-alt text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600"></i>
+          </div>
+          <h3 class="text-2xl font-esportiva-heading mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Musik</h3>
+          <p class="text-gray-400 text-md leading-relaxed transition-all duration-300 transform group-hover:translate-x-2">
+            ♫ Mengkurasi soundtrack kehidupan dengan playlist dinamis yang terus berevolusi mengikuti ritme jiwa
+          </p>
+        </div>
+      </div>
+
+      <!-- Kartu Layanan 3 -->
+      <div class="group relative bg-gradient-to-br from-gray-800/30 to-gray-900/50 p-8 rounded-2xl border border-gray-700/30 hover:border-transparent transition-all duration-500 hover:bg-gray-900/70 backdrop-blur-lg transform hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20">
+        <div class="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-50 transition-opacity"></div>
+        <div class="relative">
+          <div class="w-16 h-16 mb-6 rounded-2xl bg-gradient-to-br from-blue-500/30 to-blue-600/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 animate-pulse-slow">
+            <i class="fas fa-film text-2xl text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600"></i>
+          </div>
+          <h3 class="text-2xl font-esportiva-heading mb-4 bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">Sinematik</h3>
+          <p class="text-gray-400 text-md leading-relaxed transition-all duration-300 transform group-hover:translate-x-2">
+            🎬 Menyulap realita menjadi karya visual bernyawa melalui angle kreatif dan teknik pengambilan gambar yang inovatif
+          </p>
+        </div>
+      </div>
+    
+</section>
+
+
+<!-- TIMELINE SECTION -->
+<section id="section-timeline" class="py-12 px-4 bg-transparent">
+  <h2 class="text-4xl font-esportiva-heading text-center mb-16 tracking-wider animate-float">
+    <span class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 font-esportiva-heading tracking-tight">
+      TIMELINE OF ACHIEVEMENTS
+    </h2>
+    <div class="relative border-l-2 border-gray-700">
+      <!-- Timeline Item 1 -->
+      <div class="mb-10 ml-6 bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-lg">
+        <span class="absolute flex items-center justify-center w-8 h-8 bg-blue-500 rounded-full -left-4 ring-8 ring-gray-800">
+          <i class="fas fa-award text-white"></i>
+        </span>
+        <h3 class="text-xl font-esportiva-heading tracking-wider">
+          Fotografer
+        </h3>
+        <p class="text-gray-400 font-esportiva-body">
+           Fotografi tingkat estetika dengan karya terbaik yang menginspirasi.
+        </p>
+        <time class="block mt-1 text-sm text-gray-500">2025</time>
+      </div>
+      <!-- Timeline Item 2 -->
+      <div class="mb-10 ml-6 bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-lg">
+        <span class="absolute flex items-center justify-center w-8 h-8 bg-green-500 rounded-full -left-4 ring-8 ring-gray-800">
+          <i class="fas fa-briefcase text-white"></i>
+        </span>
+        <h3 class="text-xl font-esportiva-heading tracking-wider">
+          Peluncuran Proyek Kreatif
+        </h3>
+        <p class="text-gray-400 font-esportiva-body">
+          Meluncurkan proyek multimedia yang menggabungkan fotografi, musik, dan tulisan inspiratif.
+        </p>
+        <time class="block mt-1 text-sm text-gray-500">2025</time>
+      </div>
+      <!-- Timeline Item 3 -->
+      <div class="mb-10 ml-6 bg-gray-800/50 p-6 rounded-xl border border-gray-700/50 shadow-lg">
+        <span class="absolute flex items-center justify-center w-8 h-8 bg-purple-500 rounded-full -left-4 ring-8 ring-gray-800">
+          <i class="fas fa-music text-white"></i>
+        </span>
+        <h3 class="text-xl font-esportiva-heading tracking-wider">
+          Koleksi Musik Favorit
+        </h3>
+        <p class="text-gray-400 font-esportiva-body">
+         playlist Lagu-lagu keren
+        </p>
+        <time class="block mt-1 text-sm text-gray-500">2025</time>
+      </div>
+    </div>
+</section>
+
+<!-- SECTION KOLASE FOTO -->
+<section id="section-beranda" class="relative w-full min-h-screen bg-gradient-to-tr from-gray-950 to-gray-900 py-24 px-8 overflow-hidden animate-fade-in">
+  <!-- Animated grid background -->
+  <div class="absolute inset-0 z-0 opacity-20 animate-grid-pan">
+    <div class="h-full w-full bg-[size:50px_50px] bg-[linear-gradient(to_right,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.1)_1px,transparent_1px)]"></div>
+  </div>
+
+  <div class="max-w-5xl mx-auto relative z-10">
+    <h2 class="text-5xl font-esportiva-heading text-center mb-8 animate-slide-in-top">
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">
+        Visual Symphony
+      </span>
+    </h2>
+    <!-- Teks estetika sebelum foto -->
+    <p class="text-center text-xl text-white font-esportiva-heading mb-12 animate-fade-in">
+      Sentuhan ajaib, keindahan yang menceritakan kisah. Sentuh untuk memulai perjalanan visual yang menakjubkan.
+    </p>
+
+    <!-- Grid kolase foto -->
+    <div id="photo-collage" class="relative flex flex-wrap justify-center items-center gap-4">
+      <img src="foto/4.jpg" alt="Foto 1" class="w-48 h-48 object-cover rounded-lg shadow-lg hover:cursor-pointer touch-effect transition-transform duration-500 transform" onclick="scatterPhoto(this)">
+      <img src="foto/8.jpg" alt="Foto 2" class="w-64 h-64 object-cover rounded-lg shadow-lg hover:cursor-pointer touch-effect transition-transform duration-500 transform" onclick="scatterPhoto(this)">
+      <img src="foto/13.jpg" alt="Foto 3" class="w-32 h-32 object-cover rounded-lg shadow-lg hover:cursor-pointer touch-effect transition-transform duration-500 transform" onclick="scatterPhoto(this)">
+      <img src="foto/16.jpg" alt="Foto 4" class="w-56 h-56 object-cover rounded-lg shadow-lg hover:cursor-pointer touch-effect transition-transform duration-500 transform" onclick="scatterPhoto(this)">
+      <img src="foto/10.jpg" alt="Foto 5" class="w-40 h-40 object-cover rounded-lg shadow-lg hover:cursor-pointer touch-effect transition-transform duration-500 transform" onclick="scatterPhoto(this)">
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- CSS untuk animasi sentuhan -->
+<style>
+  .touch-effect:hover {
+    animation: touchAnim 0.3s ease-in-out;
+  }
+  @keyframes touchAnim {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+  }
+</style>
+
+<!-- JavaScript untuk animasi "mecer" saat foto diklik -->
+<script>
+  function scatterPhoto(photo) {
+    // Menghasilkan offset acak untuk X dan Y serta rotasi acak
+    const randomX = (Math.random() - 0.5) * 200; // antara -100px hingga +100px
+    const randomY = (Math.random() - 0.5) * 200; // antara -100px hingga +100px
+    const randomRotate = (Math.random() - 0.5) * 60; // antara -30° hingga +30°
+
+    // Terapkan transformasi untuk animasi "mecer"
+    photo.style.transform = `translate(${randomX}px, ${randomY}px) rotate(${randomRotate}deg) scale(1.1)`;
+
+    // Kembalikan posisi setelah 1,5 detik untuk efek reset (opsional)
+    setTimeout(() => {
+      photo.style.transform = 'translate(0, 0) rotate(0deg) scale(1)';
+    }, 1500);
+  }
+</script>
+
+    
+<!-- FOTO SECTION --> 
+<section id="section-foto" class="section hidden">
+  <!-- Teks Sambutan -->
+  <div class="container mx-auto mb-12 text-center">
+    <h2 class="text-4xl font-playfair font-bold text-white mb-4">Galeri Kenangan Kami</h2>
+    <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+      Jelajahi momen-momen berharga yang telah kami abadikan. Setiap foto menceritakan kisah unik dari perjalanan kami.
+    </p>
+  </div>
+
+  <!-- Grid Foto -->
+  <div class="container mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+      <!-- Card Foto 1 -->
+       
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="0">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/1.jpg" alt="Foto 1" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- Overlay dihapus agar foto langsung terlihat -->
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Sunset Paradise</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card Foto 2-10 gunakan struktur serupa -->
+      <!-- Misalnya: -->
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="1">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/2.jpg" alt="Foto 2" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tambahkan card foto lainnya sesuai struktur yang sama -->
+      <!-- Card Foto 2-10 gunakan struktur serupa -->
+      <!-- Misalnya: -->
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="2">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/3.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+<!-- Card Foto 2-10 gunakan struktur serupa -->
+      <!-- Misalnya: -->
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="3">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/4.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="4">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/5.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="5">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/6.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="6">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/7.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="7">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/8.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="8">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/9.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="9">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/10.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="10">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/11.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="11">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/12.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="12">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/13.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="13">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/14.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="14">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/15.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="15">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/16.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="16">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/17.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="17">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/18.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="18">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/19.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class=" gallery-photo" data-index="19">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/20.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group w-full md:w-4/9 lg:w-4/9 bg-gradient-to-br from-gray-920 to-gray-800 p-8 md:p-12 rounded-3xl shadow-2xl backdrop-blur-sm border border-gray-700/50 my-16 mx-auto transition-all duration-300 hover:shadow-3xl hover:-translate-y-1 animate-fade-in-up gallery-photo" data-index="20">
+        <div class="relative h-80 rounded-xl overflow-hidden bg-gray-800/50 backdrop-blur-sm">
+          <img src="foto/21.jpg" alt="Foto 3" class="w-full h-full object-contain transition-opacity duration-300 group-hover:opacity-90" />
+          <!-- <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div> -->
+        </div>
+        <div class="mt-4">
+          <h3 class="font-playfair text-xl font-semibold text-white mb-1">Morning Bliss</h3>
+          <div class="flex justify-between text-gray-300 text-sm font-medium">
+            <span>2023</span>
+            <span class="flex items-center">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"/>
+              </svg>
+              Bali
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Video Section -->
+<section id="section-video" class="section hidden">
+  <div class="container mx-auto px-4">
+    <div class="content-container">
+      <!-- Featured Video 1 -->
+      <div class="featured-content mb-12 rounded-xl overflow-hidden relative h-[500px]"
+        style="background: linear-gradient(to bottom, rgba(0,0,0,0), #151515), url('img/hero-bg.jpg');">
+        <div class="absolute bottom-16 left-8 text-white max-w-2xl">
+          <h2 class="featured-title text-5xl font-bold mb-4">Premium Events</h2>
+          <p class="featured-desc text-lg mb-6">Momen spesial yang kami dokumentasikan dengan teknologi cinematography terbaik dan dikemas dalam bentuk film profesional.</p>
+          <button class="featured-button bg-red-600 text-white px-8 py-3 rounded-md text-lg font-semibold hover:bg-red-700 transition">
+            WATCH TRAILER
+          </button>
+        </div>
+      </div>
+
+
+   <!-- Video Section -->
+<div class="video-section">
+
+  <!-- Video List Container 1 -->
+  <div class="movie-list-container mb-16">
+    <h1 class="movie-list-title text-3xl text-white font-bold mb-6">Wedding Events</h1>
+    <div class="movie-list-wrapper relative">
+      <div class="movie-list flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
+        
+        <!-- Card Video 1 -->
+        <div class="movie-list-item flex-shrink-0 w-80">
+          <div class="card-hover bg-gray-800 rounded-xl p-4 h-full">
+            <div class="video-container h-64 bg-gray-700 rounded-lg mb-4 relative group">
+              <video class="h-full w-full object-cover rounded-lg">
+                <source src="video/Hotel ambarukmo.mp4" type="video/mp4" />
+                Browser Anda tidak mendukung video.
+              </video>
+              
+              <!-- Custom Video Controls -->
+              <div class="video-controls absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                <!-- Progress Bar -->
+                <div class="progress-bar bg-gray-600 h-1.5 rounded mb-2 cursor-pointer">
+                  <div class="progress-fill bg-red-600 h-full rounded" style="width: 0%"></div>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-4">
+                    <button class="play-pause text-white hover:text-red-500 transition">
+                      <i class="fas fa-play text-sm"></i>
+                    </button>
+                    <span class="time-display text-white text-sm">
+                      <span class="current-time">0:00</span> / 
+                      <span class="duration">0:00</span>
+                    </span>
+                  </div>
+                  
+                  <div class="flex items-center space-x-4">
+                    <div class="volume-container relative group/volume">
+                      <button class="volume-btn text-white hover:text-red-500 transition">
+                        <i class="fas fa-volume-up text-sm"></i>
+                      </button>
+                      <input type="range" class="volume-slider absolute -top-10 -left-8 w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer opacity-0 group-hover/volume:opacity-100 transition" min="0" max="1" step="0.1" value="1">
+                    </div>
+                    <button class="fullscreen text-white hover:text-red-500 transition">
+                      <i class="fas fa-expand text-sm"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h3 class="font-playfair text-white mb-2 text-xl">Wedding Son Owner Hotel</h3>
+            <div class="flex justify-between text-gray-400 text-sm">
+              <span>2023</span>
+              <span>Yogyakarta</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card Video 2 (struktur sama dengan Card Video 1) -->
+        
+      </div>
+      <i class="fas fa-chevron-right arrow absolute right-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white text-3xl p-2 rounded-full cursor-pointer hover:bg-opacity-70 transition"></i>
+    </div>
+  </div>
+
+  <!-- Featured Video 2 -->
+  <!-- ... (struktur sama dengan sebelumnya) ... -->
+  
+</div>
+
+<style>
+  /* Custom Video Controls Styling */
+  .video-controls {
+    transform: translateY(100%);
+    transition: all 0.3s ease;
+  }
+  
+  .video-container:hover .video-controls {
+    transform: translateY(0);
+  }
+
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 12px;
+    height: 12px;
+    background: #dc2626;
+    border-radius: 50%;
+  }
+
+  .progress-bar {
+    transition: height 0.2s ease;
+  }
+
+  .progress-bar:hover {
+    height: 4px;
+  }
+
+  .progress-fill {
+    transition: width 0.1s linear;
+  }
+</style>
+
+<script>
+  // Video Controls Functionality
+  document.querySelectorAll('.video-container').forEach(container => {
+    const video = container.querySelector('video');
+    const playPause = container.querySelector('.play-pause');
+    const progressFill = container.querySelector('.progress-fill');
+    const volumeSlider = container.querySelector('.volume-slider');
+    const currentTimeElem = container.querySelector('.current-time');
+    const durationElem = container.querySelector('.duration');
+
+    // Play/Pause
+    playPause.addEventListener('click', () => {
+      video.paused ? video.play() : video.pause();
+    });
+
+    // Update Play/Pause Button
+    video.addEventListener('play', () => {
+      playPause.innerHTML = '<i class="fas fa-pause text-sm"></i>';
+    });
+
+    video.addEventListener('pause', () => {
+      playPause.innerHTML = '<i class="fas fa-play text-sm"></i>';
+    });
+
+    // Progress Bar
+    video.addEventListener('timeupdate', () => {
+      const progress = (video.currentTime / video.duration) * 100;
+      progressFill.style.width = `${progress}%`;
+      currentTimeElem.textContent = formatTime(video.currentTime);
+    });
+
+    // Seek
+    container.querySelector('.progress-bar').addEventListener('click', (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const pos = (e.clientX - rect.left) / rect.width;
+      video.currentTime = pos * video.duration;
+    });
+
+    // Volume Control
+    volumeSlider.addEventListener('input', (e) => {
+      video.volume = e.target.value;
+    });
+
+    // Fullscreen
+    container.querySelector('.fullscreen').addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        container.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    // Format Time
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      seconds = Math.floor(seconds % 60);
+      return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // Set initial duration
+    video.addEventListener('loadedmetadata', () => {
+      durationElem.textContent = formatTime(video.duration);
+    });
+  });
+</script>
+
+      <!-- Video List Container 2 -->
+      <div class="movie-list-container mb-16">
+        <h1 class="movie-list-title text-3xl text-white font-bold mb-6">Corporate Events</h1>
+        <div class="movie-list-wrapper relative">
+          <div class="movie-list flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
+            <!-- Card Video 3 -->
+            <div class="movie-list-item flex-shrink-0 w-80">
+              <div class="card-hover bg-gray-800 rounded-xl p-4 h-full">
+                <div class="h-64 bg-gray-700 rounded-lg mb-4 flex items-center justify-center">
+                  <video controls class="h-full w-full object-cover rounded-lg">
+                    <source src="video/Hotel sheraton.mp4" type="video/mp4" />
+                    Browser Anda tidak mendukung video.
+                  </video>
+                </div>
+                <h3 class="font-playfair text-white mb-2 text-xl">Acara Mahalini</h3>
+                <div class="flex justify-between text-gray-400 text-sm">
+                  <span>2023</span>
+                  <span>Prambanan</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tambahkan card video lainnya di sini -->
+            
+          </div>
+          <i class="fas fa-chevron-right arrow absolute right-0 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white text-3xl p-2 rounded-full cursor-pointer hover:bg-opacity-70 transition"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+
+const arrows = document.querySelectorAll(".arrow");
+const movieLists = document.querySelectorAll(".movie-list");
+
+arrows.forEach((arrow, i) => {
+  arrow.addEventListener("click", () => {
+    movieLists[i].scrollLeft += 300;
+  });
+});
+</script>
+
+<!-- MUSIC AI SECTION -->
+<section id="section-musik" class="section hidden">
+<!-- Welcome Message -->
+<div class="mb-8 text-center">
+  <div class="inline-block p-6 bg-transparent rounded-xl shadow-lg">
+    <h2 class="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600 font-esportiva-heading tracking-tight">
+      KOLEKSI MUSIK FAVORIT SAYA
+    </h2>
+    <div class="mt-2 w-20 h-1 bg-gradient-to-r from-blue-500 to-transparent mx-auto rounded-full"></div>
+    <p class="text-gray-300/90 font-esportiva-body leading-relaxed text-lg md:text-xl text-center max-w-2xl mx-auto transition-colors hover:text-gray-100">
+      NIKMATI KOLEKSI MUSIK EKSKLUSIF KLIK PLAY UNTUK MENDENGARKAN
+    </p>
+  </div>
+</div>
+
+<!-- Global Music Player -->
+<div id="global-player" class="player global-player bg-gray-800 rounded-xl p-6 mx-auto max-w-xl shadow-lg relative overflow-hidden">
+  <!-- Video Background -->
+  <video autoplay muted loop class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
+    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- Content -->
+  <div class="relative z-10">
+    <div class="flex items-center">
+      <img id="global-player-img" src="https://cdn.pixabay.com/photo/2017/08/05/22/29/gorilla-2586193_1280.jpg" alt="Track Image" class="w-20 h-20 object-cover rounded-lg mr-4">
+      <div class="info">
+        <h1 id="global-player-title" class="text-xl text-white font-bold">dor</h1>
+        <p id="global-player-artist" class="text-gray-300">OneBitMusic</p>
+      </div>
+    </div> 
+  
+
+      <!-- Previous Button -->
+      <button id="prev-btn" class="p-3 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-lg shadow-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-300 transform hover:scale-105 active:scale-95">
+        <svg width="24" height="24" viewBox="0 0 30 30" class="fill-current text-white hover:text-cyan-200 transition-colors">
+          <path d="M2.33917 13.7397L12.9664 7.38149C13.2293 7.22152 13.5303 7.13509 13.8381 7.13123C14.1458 7.12737 14.4489 7.20622 14.7157 7.35955C15.0053 7.52815 15.245 7.77036 15.4107 8.0616C15.5763 8.35284 15.6619 8.68272 15.6588 9.01775V13.4657L25.8274 7.3798C26.0903 7.21983 26.3914 7.13341 26.6991 7.12955C27.0068 7.12568 27.3099 7.20454 27.5768 7.35786C27.8663 7.52646 28.1061 7.76867 28.2717 8.05991C28.4373 8.35115 28.5229 8.68103 28.5198 9.01606V21.4512C28.5231 21.7863 28.4376 22.1163 28.2719 22.4077C28.1063 22.699 27.8664 22.9413 27.5768 23.1099C27.3099 23.2632 27.0068 23.3421 26.6991 23.3382C26.3914 23.3344 26.0903 23.2479 25.8274 23.088L15.6588 16.9993V21.4489C15.6625 21.7844 15.5771 22.1149 15.4114 22.4067C15.2458 22.6985 15.0057 22.9411 14.7157 23.1099C14.4489 23.2632 14.1458 23.3421 13.8381 23.3382C13.5303 23.3344 13.2293 23.2479 12.9664 23.088L2.33917 16.7298C2.08653 16.5715 1.87825 16.3516 1.73386 16.0908C1.58948 15.83 1.51373 15.5368 1.51373 15.2387C1.51373 14.9406 1.58948 14.6473 1.73386 14.3865C1.87825 14.1257 2.08653 13.9058 2.33917 13.7476V13.7397Z"/>
+        </svg>
+      </button>
+    
+      <!-- Play/Pause Button -->
+      <button id="play-btn" class="p-4 rounded-full bg-gradient-to-br from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 shadow-2xl shadow-cyan-500/50 hover:shadow-3xl hover:shadow-cyan-500/30 transition-all duration-300 transform hover:scale-110 active:scale-95">
+        <svg width="32" height="32" viewBox="0 0 30 30" class="fill-current text-white hover:text-teal-100 transition-colors">
+          <!-- Play Icon -->
+          <path id="play-icon" d="M8.32137 25.586C7.9759 25.5853 7.63655 25.4948 7.33669 25.3232C6.66148 24.9406 6.24173 24.1978 6.24173 23.3915V7.07398C6.24173 6.26542 6.66148 5.52494 7.33669 5.14232C7.64369 4.96589 7.99244 4.87516 8.3465 4.87961C8.70056 4.88407 9.04692 4.98354 9.34938 5.16764L23.2952 13.5155C23.5859 13.6977 23.8255 13.9508 23.9916 14.251C24.1577 14.5511 24.2448 14.8886 24.2448 15.2316C24.2448 15.5747 24.1577 15.9121 23.9916 16.2123C23.8255 16.5125 23.5859 16.7655 23.2952 16.9478L9.34713 25.2979C9.0376 25.485 8.68307 25.5846 8.32137 25.586V25.586Z"/>
+          <!-- Pause Icon (hidden by default) -->
+          <path id="pause-icon" d="M13 6H17C18.1046 6 19 6.89543 19 8V22C19 23.1046 18.1046 24 17 24H13C11.8954 24 11 23.1046 11 22V8C11 6.89543 11.8954 6 13 6Z" class="hidden" fill="currentColor"/>
+        </svg>
+      </button>
+    
+      <!-- Next Button -->
+      <button id="next-btn" class="p-3 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 shadow-lg shadow-indigo-500/50 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-300 transform hover:scale-105 active:scale-95">
+        <svg width="24" height="24" viewBox="0 0 29 30" class="fill-current text-white hover:text-cyan-200 transition-colors">
+          <path d="M27.1426 13.7397L16.5154 7.38149C16.2525 7.22152 15.9514 7.13509 15.6437 7.13123C15.336 7.12737 15.0329 7.20622 14.766 7.35955C14.4765 7.52815 14.2368 7.77036 14.0711 8.0616C13.9055 8.35284 13.8199 8.68272 13.823 9.01775V13.4657L3.65435 7.3798C3.39144 7.21983 3.0904 7.13341 2.78268 7.12955C2.47495 7.12568 2.17183 7.20454 1.905 7.35786C1.61547 7.52646 1.37571 7.76867 1.21008 8.05991C1.04445 8.35115 0.958845 8.68103 0.961955 9.01606V21.4512C0.958745 21.7863 1.0443 22.1163 1.20994 22.4076C1.37558 22.699 1.61538 22.9413 1.905 23.1099C2.17183 23.2632 2.47495 23.3421 2.78268 23.3382C3.0904 23.3344 3.39144 23.2479 3.65435 23.088L13.823 16.9993V21.4489C13.8194 21.7844 13.9048 22.1149 14.0704 22.4066C14.2361 22.6984 14.4761 22.9411 14.766 23.1099C15.0329 23.2632 15.336 23.3421 15.6437 23.3382C15.9514 23.3344 16.2525 23.2479 16.5154 23.088L27.1426 16.7298C27.3953 16.5715 27.6035 16.3516 27.7479 16.0908C27.8923 15.83 27.968 15.5368 27.968 15.2387C27.968 14.9406 27.8923 14.6473 27.7479 14.3865C27.6035 14.1257 27.3953 13.9058 27.1426 13.7476V13.7397Z"/>
+        </svg>
+      </button>
+    </div>
+
+
+    <!-- Global audio element -->
+    <audio id="global-audio" src="musik/Stormzy - Godspeed  Frank Ocean Cover.mp3"></audio>
+  </div>
+
+  <!-- Music Cards Grid -->
+<section class="px-4 md:px-8"> <!-- Tambahkan padding horizontal untuk container -->
+  <div id="music-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 max-w-6xl mx-auto">
+    <!-- Contoh Card Musik 1 -->
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="0">
+      <img src="foto/image1.png" alt="MUSIC AI 1" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Godspeed</h3>
+        <p class="text-gray-300 text-sm">frank Ocean</p>
+      </div>
+    </div>
+    <!-- Contoh Card Musik 2 -->
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="1">
+      <img src="foto/image2.png" alt="MUSIC AI 2" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">the Last Night</h3>
+        <p class="text-gray-300 text-sm">Green day</p>
+      </div>
+    </div>
+    <!-- Contoh Card Musik 3 -->
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="2">
+      <img src="songpict/blue.png" alt="MUSIC AI 3" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Blue</h3>
+        <p class="text-gray-300 text-sm">Yung Kai</p>
+      </div>
+    </div>
+    <!-- Card tambahan -->
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="3">
+      <img src="songpict/conangray.png" alt="MUSIC AI 4" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Heather</h3>
+        <p class="text-gray-300 text-sm">Conan Gray</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="4">
+      <img src="songpict/viratalisa.png" alt="MUSIC AI 5" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Walking Back Home</h3>
+        <p class="text-gray-300 text-sm">Vira Talisa</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="5">
+      <img src="songpict/Sheryl Sheinafia.png" alt="MUSIC AI 6" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Ku Tunggu Kau Putus</h3>
+        <p class="text-gray-300 text-sm">Sheryl Sheinafia</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="6">
+      <img src="songpict/Pamungkas.png" alt="MUSIC AI 7" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">To The Bone</h3>
+        <p class="text-gray-300 text-sm">Pamungkas</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="7">
+      <img src="songpict/Avenged Sevenfold.png" alt="MUSIC AI 6" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Dear God</h3>
+        <p class="text-gray-300 text-sm">Avenged Sevenfold</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="8">
+      <img src="songpict/MLTR copy.png" alt="MUSIC AI 6" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">That's Why You Go Away</h3>
+        <p class="text-gray-300 text-sm">MLTR</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="9">
+      <img src="songpict/Lonely.png" alt="MUSIC AI 6" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Lonely</h3>
+        <p class="text-gray-300 text-sm">Akon</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="10">
+      <img src="songpict/Paramore.png" alt="MUSIC AI 6" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">The Only Exception</h3>
+        <p class="text-gray-300 text-sm">Paramore</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="11">
+      <img src="songpict/Ed Sheeran.png" alt="MUSIC AI 6" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Dive</h3>
+        <p class="text-gray-300 text-sm">Ed Sheeran</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="12">
+      <img src="songpict/Aziz Hedra.png" alt="MUSIC AI 6" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Somebody's Pleasure</h3>
+        <p class="text-gray-300 text-sm">Aziz Hedra</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="13">
+      <img src="songpict/Jamie Miller.png" alt="MUSIC AI 6" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">Here's Your Perfect</h3>
+        <p class="text-gray-300 text-sm">Jamie Miller</p>
+      </div>
+    </div>
+    <div class="card-music bg-gray-900 rounded-xl p-4 cursor-pointer relative overflow-hidden transition transform hover:scale-105" data-index="14">
+      <img src="songpict/Hoobastank.png" alt="MUSIC AI 6" class="w-full h-40 object-cover rounded-md opacity-80">
+      <div class="mt-4">
+        <h3 class="text-white font-bold text-lg">The Reason</h3>
+        <p class="text-gray-300 text-sm">Hoobastank</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+
+
+  // Data playlist
+  const tracks = [
+    {
+      title: "Godspeed",
+      artist: "frank Ocean",
+      image: "foto/image1.png",
+      src: "musik/Stormzy - Godspeed  Frank Ocean Cover.mp3"
+    },
+    {
+      title: "Last Night on Earth",
+      artist: "Green Day",
+      image: "foto/image2.png",
+      src: "musik/Green Day - Last Night On Earth (cover).mp3"
+    },
+    {
+      title: "Blue",
+      artist: "Yung Kai",
+      image: "songpict/blue.png",
+      src: "musik/yung kai - blue (Official Music Video).mp3"
+    },
+    {
+      title: "Heather",
+      artist: "Conan Gray",
+      image: "songpict/conangray.png",
+      src: "musik/Conan Gray - Heather (Lyric Video).mp3"
+    },
+    {
+      title: "Walking Back Home",
+      artist: "Vira Talisa",
+      image: "songpict/viratalisa.png",
+      src: "musik/Vira Talisa Dharmawan - Walking Back Home.mp3"
+    },
+    {
+      title: "Ku Tunggu Kau Putus",
+      artist: "Sheryl Sheinafia",
+      image: "songpict/Sheryl Sheinafia.png",
+      src: "musik/Sheryl Sheinafia Feat. Ariel NOAH - Kutunggu Kau Putus (Official Music Video).mp3"
+    },
+    {
+      title: "To The Bone",
+      artist: "Pamungkas",
+      image: "songpict/Pamungkas.png",
+      src: "musik/Pamungkas - To The Bone.mp3"
+    },
+    {
+      title: "Dear God",
+      artist: "Avenged Sevenfold",
+      image: "songpict/Avenged Sevenfold.png",
+      src: "musik/Avenged Sevenfold - Dear God (Lirik + Terjemahan).mp3"
+    },
+    {
+      title: "That's Why You Go Away",
+      artist: "MLTR",
+      image: "songpict/MLTR.png",
+      src: "musik/Michael Learn To Rock - Thats Why You Go Away  ( Lyrics beserta video dan terjemahan ).mp3"
+    },
+    {
+      title: "Lonely",
+      artist: "Akon",
+      image: "songpict/Lonely.png",
+      src: "musik/Akon - Lonely (Official Music Video).mp3"
+    },
+    {
+      title: "The Only Exception",
+      artist: "Paramore",
+      image: "songpict/Paramore.png",
+      src: "musik/Paramore The Only Exception [OFFICIAL VIDEO].mp3"
+    },
+    {
+      title: "Dive",
+      artist: "Ed Sheeran",
+      image: "songpict/Ed Sheeran.png",
+      src: "musik/DIVE - Ed Sheeran (LyricsVietsub).mp3"
+    },
+    {
+      title: "Somebody's Pleasure",
+      artist: "Aziz Sheeran",
+      image: "songpict/Aziz Hedra.png",
+      src: "musik/Aziz Hedra - Somebodys Pleasure (Official Lyric Video).mp3"
+    },
+    {
+      title: "Here's Your Perfect",
+      artist: "Jamie Miller",
+      image: "songpict/Jamie Miller.png",
+      src: "musik/Jamie Miller - Heres Your Perfect (Official Music Video).mp3"
+    },
+    {
+      title: "The Reason",
+      artist: "Hoobastank",
+      image: "songpict/Hoobastank.png",
+      src: "musik/Hoobastank - The Reason (Official Music Video).mp3"
+    }
+  ];
+
+  let currentTrackIndex = 0;
+  const globalAudio = document.getElementById('global-audio');
+  const globalPlayerImg = document.getElementById('global-player-img');
+  const globalPlayerTitle = document.getElementById('global-player-title');
+  const globalPlayerArtist = document.getElementById('global-player-artist');
+  const playBtn = document.getElementById('play-btn');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+  let isPlaying = false;
+
+  // Tambahkan event listener untuk event "ended" pada globalAudio
+globalAudio.addEventListener('ended', () => {
+  // Update index ke track berikutnya
+  currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+  // Muat track berikutnya
+  loadTrack(currentTrackIndex);
+  // Mulai putar track berikutnya
+  globalAudio.play();
+});
+
+
+  // Update global player dengan info track
+
+  function loadTrack(index) {
+    const track = tracks[index];
+    globalPlayerImg.src = track.image;
+    globalPlayerTitle.innerHTML = track.title;
+    globalPlayerArtist.textContent = track.artist;
+    globalAudio.src = track.src;
+  }
+
+  // Toggle play/pause dan update ikon
+  function togglePlay() {
+    if (isPlaying) {
+      globalAudio.pause();
+      playBtn.innerHTML = `<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8.32137 25.586C7.9759 25.5853 7.63655 25.4948 7.33669 25.3232C6.66148 24.9406 6.24173 24.1978 6.24173 23.3915V7.07398C6.24173 6.26542 6.66148 5.52494 7.33669 5.14232C7.64369 4.96589 7.99244 4.87516 8.3465 4.87961C8.70056 4.88407 9.04692 4.98354 9.34938 5.16764L23.2952 13.5155C23.5859 13.6977 23.8255 13.9508 23.9916 14.251C24.1577 14.5511 24.2448 14.8886 24.2448 15.2316C24.2448 15.5747 24.1577 15.9121 23.9916 16.2123C23.8255 16.5125 23.5859 16.7655 23.2952 16.9478L9.34713 25.2979C9.0376 25.485 8.68307 25.5846 8.32137 25.586V25.586Z" fill="#E1E1E6"/>
+            </svg>`;
+      isPlaying = false;
+    } else {
+      globalAudio.play();
+      playBtn.innerHTML = `<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2.33917 13.7397L12.9664 7.38149C13.2293 7.22152 13.5303 7.13509 13.8381 7.13123C14.1458 7.12737 14.4489 7.20622 14.7157 7.35955C15.0053 7.52815 15.245 7.77036 15.4107 8.0616C15.5763 8.35284 15.6619 8.68272 15.6588 9.01775V13.4657L25.8274 7.3798C26.0903 7.21983 26.3914 7.13341 26.6991 7.12955C27.0068 7.12568 27.3099 7.20454 27.5768 7.35786C27.8663 7.52646 28.1061 7.76867 28.2717 8.05991C28.4373 8.35115 28.5229 8.68103 28.5198 9.01606V21.4512C28.5231 21.7863 28.4376 22.1163 28.2719 22.4077C28.1063 22.699 27.8664 22.9413 27.5768 23.1099C27.3099 23.2632 27.0068 23.3421 26.6991 23.3382C26.3914 23.3344 26.0903 23.2479 25.8274 23.088L15.6588 16.9993V21.4489C15.6625 21.7844 15.5771 22.1149 15.4114 22.4067C15.2458 22.6985 15.0057 22.9411 14.7157 23.1099C14.4489 23.2632 14.1458 23.3421 13.8381 23.3382C13.5303 23.3344 13.2293 23.2479 12.9664 23.088L2.33917 16.7298C2.08653 16.5715 1.87825 16.3516 1.73386 16.0908C1.58948 15.83 1.51373 15.5368 1.51373 15.2387C1.51373 14.9406 1.58948 14.6473 1.73386 14.3865C1.87825 14.1257 2.08653 13.9058 2.33917 13.7476V13.7397Z" fill="#E1E1E6"/>
+            </svg>`;
+      isPlaying = true;
+    }
+  }
+
+  // Global player control events
+  playBtn.addEventListener('click', togglePlay);
+
+  prevBtn.addEventListener('click', () => {
+    currentTrackIndex = (currentTrackIndex - 1 + tracks.length) % tracks.length;
+    loadTrack(currentTrackIndex);
+    if (isPlaying) {
+      globalAudio.play();
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentTrackIndex = (currentTrackIndex + 1) % tracks.length;
+    loadTrack(currentTrackIndex);
+    if (isPlaying) {
+      globalAudio.play();
+    }
+  });
+
+  // Jika card musik diklik, muat track terkait dan mainkan
+  document.querySelectorAll('.card-music').forEach(card => {
+    card.addEventListener('click', () => {
+      currentTrackIndex = parseInt(card.getAttribute('data-index'));
+      loadTrack(currentTrackIndex);
+      // Jika sedang tidak diputar, langsung mainkan
+      if (!isPlaying) togglePlay();
+      else globalAudio.play();
+    });
+  });
+
+  // Muat track awal
+  loadTrack(currentTrackIndex);
+</script>
+
+</section>
+
+
+
+
+  <!-- PHOTO MODAL -->
+  <div id="photoModal" class="fixed inset-0 z-50 hidden flex items-center justify-center">
+    <button id="closeModal" class="absolute top-5 right-5 text-white text-4xl">&times;</button>
+    <button id="prevPhoto" class="absolute left-5 text-white text-4xl">&#8592;</button>
+    <img id="modalImage" class="max-h-full max-w-full" src="" alt="Tampilan Besar" />
+    <button id="nextPhoto" class="absolute right-5 text-white text-4xl">&#8594;</button>
+  </div>
+
+  <!-- SCRIPTS -->
+<script>
+  // Fungsi membuka konten utama
+  function unlockAccess() {
+    document.getElementById('loginScreen').remove();
+    document.getElementById('mainContent').classList.remove('hidden');
+    localStorage.setItem('accessGranted', 'true'); // Simpan status akses di localStorage
+  }
+
+  // Fungsi menutup konten utama
+  function lockAccess() {
+    // Buat ulang elemen loginScreen jika diperlukan
+    const loginScreen = document.createElement('div');
+    loginScreen.id = 'loginScreen';
+    // Tambahkan konten dan gaya yang diperlukan untuk loginScreen
+    document.body.prepend(loginScreen);
+
+    document.getElementById('mainContent').classList.add('hidden');
+    localStorage.removeItem('accessGranted'); // Hapus status akses dari localStorage
+  }
+
+  // Cek password
+  function checkPassword() {
+    const password = document.getElementById('password').value;
+    if (password === 'sidorus') {
+      unlockAccess();
+      showSection('section-beranda');
+    }
+  }
+
+  // Shift + A
+  document.addEventListener('keydown', function(e) {
+    if (e.shiftKey && e.key === 'A') {
+      unlockAccess();
+      showSection('section-beranda');
+    }
+  });
+
+  // Ganti section
+  function showSection(sectionId) {
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => section.classList.add('hidden'));
+    document.getElementById(sectionId).classList.remove('hidden');
+  }
+
+  // Periksa status akses saat memuat halaman
+  document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('accessGranted') === 'true') {
+      unlockAccess();
+      showSection('section-beranda');
+    }
+  });
+
+
+    // Modal Foto
+    const photoSources = [
+      "foto/1.jpg",
+      "foto/2.jpg",
+      "foto/3.jpg",
+      "foto/4.jpg",
+      "foto/5.jpg",
+      "foto/6.jpg",
+      "foto/7.jpg",
+      "foto/8.jpg",
+      "foto/9.jpg",
+      "foto/10.jpg",
+      "foto/11.jpg",
+      "foto/12.jpg",
+      "foto/13.jpg",
+      "foto/14.jpg",
+      "foto/15.jpg",
+      "foto/16.jpg",
+      "foto/17.jpg",
+      "foto/18.jpg",
+      "foto/19.jpg",
+      "foto/20.jpg",
+      "foto/21.jpg",
+    ];
+    let currentPhotoIndex = 0;
+    const modal = document.getElementById('photoModal');
+    const modalImage = document.getElementById('modalImage');
+
+    function openModal(index) {
+      currentPhotoIndex = index;
+      modalImage.src = photoSources[currentPhotoIndex];
+      modal.classList.remove('hidden');
+    }
+    function closeModal() {
+      modal.classList.add('hidden');
+    }
+    function prevPhoto() {
+      currentPhotoIndex = (currentPhotoIndex - 1 + photoSources.length) % photoSources.length;
+      modalImage.src = photoSources[currentPhotoIndex];
+    }
+    function nextPhoto() {
+      currentPhotoIndex = (currentPhotoIndex + 1) % photoSources.length;
+      modalImage.src = photoSources[currentPhotoIndex];
+    }
+
+    // Pasang event listener pada tiap card foto
+    const galleryPhotos = document.querySelectorAll('.gallery-photo');
+    galleryPhotos.forEach(card => {
+      card.addEventListener('click', () => {
+        const index = parseInt(card.getAttribute('data-index'));
+        openModal(index);
+      });
+    });
+
+    // Tombol modal
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    document.getElementById('prevPhoto').addEventListener('click', prevPhoto);
+    document.getElementById('nextPhoto').addEventListener('click', nextPhoto);
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+  </script>
+
+  <!-- Script Tombol Musik (Play/Pause) -->
+  <script>
+    const musicButton = document.getElementById('musicButton');
+    const audio = document.getElementById('audio');
+    
+    musicButton.addEventListener('click', function() {
+      if (audio.paused) {
+        audio.play();
+        musicButton.classList.remove('bg-blue-500');
+        musicButton.classList.add('bg-green-500');
+      } else {
+        audio.pause();
+        musicButton.classList.remove('bg-green-500');
+        musicButton.classList.add('bg-blue-500');
+      }
+    });
+  </script>
+
+<body class="gradient-bg min-h-screen text-white font-esportiva-body relative">
+  <!-- Scroll Progress Bar -->
+  <div class="h-1 bg-gray-800 fixed top-0 left-0 z-50">
+    <div id="scroll-progress" class="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"></div>
+  </div>
+
+  <footer class="bg-gray-900/95 backdrop-blur-lg py-12 px-6 mt-16 relative overflow-hidden border-t border-gray-700/50">
+    <!-- Particle Animation -->
+    <div class="absolute inset-0 particle-network-animation" aria-hidden="true"></div>
+    
+    <div class="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 relative z-10">
+      
+      <!-- Logo dengan Hover 3D -->
+      <div class="text-center md:text-left mb-6 md:mb-0 group">
+        <div class="hover:-translate-y-2 transition-transform duration-500">
+          <img src="foto/logo.png" alt="Logo Sidorus" 
+               class="mx-auto md:mx-0 w-32 mb-4 animate-float">
+          <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-1 w-0 group-hover:w-full transition-all duration-500"></div>
+        </div>
+        <p class="text-gray-400 text-sm leading-relaxed mt-4">
+          Sidorus adalah platform yang menyediakan konten foto dan video berkualitas tinggi, 
+          serta informasi terbaru tentang dunia fotografi.
+        </p>
+      </div>
+
+      <!-- Tautan Cepat dengan Hover Effect -->
+      <div class="text-center md:text-left mb-6 md:mb-0">
+        <h4 class="text-lg font-esportiva-heading text-white mb-4 tracking-wider border-l-4 border-blue-500 pl-3">Tautan Cepat</h4>
+        <ul class="text-gray-400 space-y-2">
+          <li><a href="#section-beranda" class="link-hover-effect">Beranda</a></li>
+          <li><a href="#section-foto" class="link-hover-effect">Foto</a></li>
+          <li><a href="#section-video" class="link-hover-effect">Video</a></li>
+          <li><a href="#section-about" class="link-hover-effect">Tentang Kami</a></li>
+          <li><a href="#section-kontak" class="link-hover-effect">Kontak</a></li>
+        </ul>
+      </div>
+
+      <!-- Kontak dengan Interactive Icons -->
+      <div class="text-center md:text-left">
+        <h4 class="text-lg font-esportiva-heading text-white mb-4 tracking-wider border-l-4 border-purple-500 pl-3">Kontak</h4>
+        <div class="space-y-2">
+          <div class="contact-item hover:bg-gray-800/50 p-2 rounded-lg transition-all">
+            <i class="fas fa-envelope mr-2 text-blue-400"></i>
+            <a href="mailto:sidorus.w@gmail.com" class="hover:text-white transition-colors">sidorus.w@gmail.com</a>
+          </div>
+          <div class="contact-item hover:bg-gray-800/50 p-2 rounded-lg transition-all">
+            <i class="fas fa-phone-alt mr-2 text-green-400"></i>
+            <a href="tel:+6281263228323" class="hover:text-white transition-colors">+62 812-6322-8323</a>
+          </div>
+          <div class="contact-item hover:bg-gray-800/50 p-2 rounded-lg transition-all">
+            <i class="fas fa-map-marker-alt mr-2 text-red-400"></i>
+            <span>Jl. cupuwatu II, Yogyakarta</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Newsletter dengan Notifikasi -->
+      <div class="text-center md:text-left">
+        <h4 class="text-lg font-esportiva-heading text-white mb-4 tracking-wider border-l-4 border-pink-500 pl-3">Newsletter</h4>
+        <form class="flex flex-col space-y-2 relative" id="newsletter-form">
+          <input type="email" placeholder="Masukkan email Anda" 
+                 class="p-2 rounded-lg bg-gray-800 text-white focus:outline-none 
+                        focus:ring-2 focus:ring-blue-500 hover:bg-gray-700 transition-all">
+          <button type="submit" 
+                  class="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-2 rounded-lg 
+                         hover:from-blue-600 hover:to-purple-600 transition-all flex items-center justify-center
+                         relative overflow-hidden group">
+            <span class="group-hover:-translate-y-32 opacity-0 group-hover:opacity-0 transition-all duration-300">
+              Berlangganan
+            </span>
+            <span class="absolute translate-y-32 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 
+                        transition-all duration-300 flex items-center">
+              <i class="fas fa-paper-plane mr-2"></i>Kirim!
+            </span>
+          </button>
+          <div id="newsletter-success" 
+               class="absolute -bottom-8 left-0 bg-green-500 text-white px-4 py-2 rounded-lg 
+                      opacity-0 transition-all duration-300">
+            Terima kasih telah berlangganan!
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Garis Pemisah dengan Animasi -->
+    <div class="mt-8 border-t border-gray-700/50 pt-8 text-center text-gray-400 text-sm relative">
+      <div class="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent 
+                  opacity-50 animate-pulse"></div>
+   
+
+
+  <!-- Rating Section (ditempatkan sebelum footer) -->
+  <section id="rating-section" class="rating-section">
+    <h2>Berikan Rating Anda</h2>
+    <div class="stars" id="stars">
+      <i class="fa-regular fa-star" data-value="1"></i>
+      <i class="fa-regular fa-star" data-value="2"></i>
+      <i class="fa-regular fa-star" data-value="3"></i>
+      <i class="fa-regular fa-star" data-value="4"></i>
+      <i class="fa-regular fa-star" data-value="5"></i>
+    </div>
+    <div class="rating-info" id="ratingInfo">
+      <p>Rata-rata Rating: <span id="averageRating">0</span> dari <span id="totalRatings">0</span> penilaian</p>
+    </div>
+  </section>
+    <!-- JavaScript untuk interaksi rating -->
+  <script>
+    const stars = document.querySelectorAll('.stars i');
+    let selectedRating = 0;
+    const ratingKeyTotal = 'rating_total';
+    const ratingKeyCount = 'rating_count';
+    const userRatedKey = 'hasRated';
+
+    // Inisialisasi localStorage jika belum ada
+    if (localStorage.getItem(ratingKeyTotal) === null) {
+      localStorage.setItem(ratingKeyTotal, '0');
+    }
+    if (localStorage.getItem(ratingKeyCount) === null) {
+      localStorage.setItem(ratingKeyCount, '0');
+    }
+
+    function updateRatingInfo() {
+      const total = parseFloat(localStorage.getItem(ratingKeyTotal));
+      const count = parseInt(localStorage.getItem(ratingKeyCount));
+      const avg = count > 0 ? (total / count) : 0;
+      document.getElementById('averageRating').innerText = avg.toFixed(1);
+      document.getElementById('totalRatings').innerText = count;
+    }
+
+    // Cek apakah pengguna sudah pernah memberikan rating
+    function disableRating() {
+      stars.forEach(star => {
+        star.style.cursor = 'default';
+        star.removeEventListener('mouseover', onStarMouseOver);
+        star.removeEventListener('mouseout', onStarMouseOut);
+        star.removeEventListener('click', onStarClick);
+      });
+    }
+
+    function onStarMouseOver() {
+      const rating = parseInt(this.getAttribute('data-value'));
+      stars.forEach(s => {
+        s.classList.toggle('hovered', parseInt(s.getAttribute('data-value')) <= rating);
+      });
+    }
+
+    function onStarMouseOut() {
+      stars.forEach(s => s.classList.remove('hovered'));
+    }
+
+    function onStarClick() {
+      if (localStorage.getItem(userRatedKey)) return; // Sudah dirating
+      selectedRating = parseInt(this.getAttribute('data-value'));
+      stars.forEach(s => {
+        s.classList.toggle('selected', parseInt(s.getAttribute('data-value')) <= selectedRating);
+        s.classList.add('animate-touch');
+        setTimeout(() => s.classList.remove('animate-touch'), 300);
+      });
+      // Simpan rating ke localStorage
+      let currentTotal = parseFloat(localStorage.getItem(ratingKeyTotal));
+      let currentCount = parseInt(localStorage.getItem(ratingKeyCount));
+      currentTotal += selectedRating;
+      currentCount++;
+      localStorage.setItem(ratingKeyTotal, currentTotal);
+      localStorage.setItem(ratingKeyCount, currentCount);
+      localStorage.setItem(userRatedKey, 'true'); // Tandai pengguna sudah memberikan rating
+      updateRatingInfo();
+      disableRating(); // Hanya satu kali rating per pengguna
+    }
+
+    // Pasang event listener jika pengguna belum memberikan rating
+    if (!localStorage.getItem(userRatedKey)) {
+      stars.forEach(star => {
+        star.addEventListener('mouseover', onStarMouseOver);
+        star.addEventListener('mouseout', onStarMouseOut);
+        star.addEventListener('click', onStarClick);
+      });
+    } else {
+      // Jika sudah dirating, langsung set bintang yang terpilih
+      // Perhitungan rata-rata tetap ditampilkan dari localStorage
+      stars.forEach(s => {
+        const value = parseInt(s.getAttribute('data-value'));
+        if (value <= selectedRating) {
+          s.classList.add('selected');
+        }
+        s.style.cursor = 'default';
+      });
+    }
+
+    // Update tampilan rating saat halaman dimuat
+    updateRatingInfo();
+  </script>
+
+    <!-- Garis Pemisah dengan Animasi -->
+    <div class="mt-8 border-t border-gray-700/50 pt-8 text-center text-gray-400 text-sm relative">
+      <div class="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent 
+                  opacity-50 animate-pulse"></div>
+      <p>&copy; 2025 Sidorus. All rights reserved.</p>
+      <p>Designed & Developed by Sidorus</p>
+    </div>
+
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background: #f5f5f5;
+        color: #333;
+     
+      }
+      .rating-section h2 {
+        font-family: 'font- Esportiva' /* Pastikan font Esportiva tersedia atau ganti dengan font lain */
+        font-size: 20px;
+        margin-bottom: 12px;
+      }
+      .stars {
+        display: inline-block;
+      }
+      .stars i {
+        font-size: 20px;
+        margin: 10px;
+        cursor: pointer;
+        transition: color 0.3s;
+        color: #aaa;
+      }
+      .stars i.hovered,
+      .stars i.selected {
+        color: #ffd700;
+      }
+      .rating-info {
+        margin-top: 20px;
+        font-size: 1.2em;
+      }
+      /* Efek sentuhan saat disentuh */
+      .animate-touch {
+        animation: touchEffect 0.3s ease-in-out;
+      }
+      @keyframes touchEffect {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
+    </style>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" 
+            class="fixed bottom-20 right-6 p-3 bg-gradient-to-r from-blue-500 to-purple-500 
+                   rounded-full shadow-lg hover:scale-110 transition-all duration-300 hidden
+                   border-2 border-white/20 hover:border-white/50">
+      <i class="fas fa-arrow-up text-white"></i>
+    </button>
+  </footer>
+
+  <script>
+    // Scroll Progress
+    window.addEventListener('scroll', () => {
+      const windowHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (window.scrollY / windowHeight) * 100;
+      document.getElementById('scroll-progress').style.width = `${scrolled}%`;
+    });
+
+    // Newsletter Form Animation
+    document.getElementById('newsletter-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const successMsg = document.getElementById('newsletter-success');
+      successMsg.style.opacity = '1';
+      setTimeout(() => successMsg.style.opacity = '0', 3000);
+    });
+
+  </script>
+
+
+
+</body>
+
+
+</body>
+
+  
+</body>
+</html>
